@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: faztpassword
+      MYSQL_DATABASE: flaskcrud
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d/
+      - mysql_data:/var/lib/mysql
+
+  web:
+    build: .
+    restart: always
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
